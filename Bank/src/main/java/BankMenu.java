@@ -2,11 +2,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class BankMenu {
+public class BankMenu  {
     private Bank bank;
+    String name = "";
+    String surName = "";
+    Date birthday = new Date();
+    boolean gender = true;
+    String email = "";
+    String password = "";
+
+    User user = new User(name,surName,birthday,gender,email,password,null,null);
+
 
     public BankMenu(Bank bank) {
-
         this.bank =  bank;
     }
 
@@ -15,7 +23,7 @@ public class BankMenu {
 
         Scanner scanner = new Scanner(System.in);
         String command;
-        while (true) {
+
         System.out.println("""
                Select one:
                1. Login
@@ -28,7 +36,7 @@ public class BankMenu {
                     case "0" -> System.exit(0);
                     default -> System.out.println("Repeat one more time");
                 }
-            }
+
     }
     private void showLogin () {
         String login;
@@ -38,60 +46,56 @@ public class BankMenu {
         login = scanner.next();
         System.out.println("Enter password:");
         password = scanner.next();
-        boolean look = bank.doLogin(login, password);
-        if (look) {
-        showBankMenu();
-        }
 
+        if (bank.doLogin(login, password)) {
+            showBankMenu();
+        } else {
+            System.out.println("If there is no user with such an email or password");
+        }
 
     }
     private void showRegister () throws ParseException  {
         Scanner scanner = new Scanner(System.in);
-
-        String name;
-        String surName;
-        Date birthday;
-        boolean gender = true;
-        String email;
-        String password;
-
         String line;
         System.out.println("Enter Name:");
-        name = scanner.next();
+        user.setName(scanner.next());
+
         System.out.println("Enter Surname:");
-        surName = scanner.next();
+        user.setSurName(scanner.next());
+
         System.out.println("Enter Birthday:");
         System.out.println("Input format dd.MM.yyyy");
         line = scanner.next();
-        birthday = new SimpleDateFormat("dd.MM.yyyy").parse(line);
+        user.setBirthday(new SimpleDateFormat("dd.MM.yyyy").parse(line));
+
         System.out.println("Enter gender:");
         System.out.println("""
                 1. Male
                 2. Female""");
         line = scanner.next();
-        if (line.equals("male") || line.equals("1")) {
-            gender = true;
-        } else if (line.equals("female") || line.equals("2")){
-            gender = false;
+        if (line.equals("female") || line.equals("2")) {
+            user.setGender(gender);
         }
         System.out.println("Enter email:");
-        email = scanner.next();
+        user.setEmail(scanner.next());
 
         System.out.println("Enter password:");
-        password = scanner.next();
+        user.setPassword(scanner.next());
 
-        bank.doRegister(new User(name,surName,birthday,gender,email,password,null,null));
+        bank.doRegister(new User(user.getName(), user.getSurName(),user.getBirthday(), user.isGender(), user.getEmail(),user.getPassword(),null,null));
 
 
 
     }
     public static void showBankMenu() {
-        System.out.println("""
+            System.out.println("""
                 1. Show my profile info
                 2. Order new service
                 3. Show my services info
                 0. Exit
                 """);
+
+
     }
 
 }

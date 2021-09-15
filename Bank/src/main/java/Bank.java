@@ -1,10 +1,10 @@
 import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Bank {
     String fileName = "User.dat";
+    File file = new File(fileName);
     BankMenu menu = new BankMenu(this);
     private ArrayList<User> users;
 
@@ -12,50 +12,46 @@ public class Bank {
         return users;
     }
 
-    public void setUsers(ArrayList<User> users) {
-        this.users = users;
-    }
-
     protected void start () throws ParseException {
-        users = new ArrayList<>(users = deserializeUsers());
+        users = new ArrayList<>();
+        if (file.length() != 0) {
+            users = deserializeUsers();
+            System.out.println(users);
+        }
         menu.showStartMenu();
     }
     protected boolean doLogin (String email, String password) {
-   /*     if () {
-            if () {
-                return true;
+        boolean look = false;
+        for (int i = 0; i < users.size(); i++) {
+            if (getUsers().get(i).email.equals(email)) {
+                if (getUsers().get(i).password.equals(password)) {
+                    look = true;
+                }
+
             }
-        } */
-        return false;
+        }
+        return look;
     }
 
-    protected boolean doRegister (User user) {
+    protected void doRegister (User user) {
         users.add(user);
-        System.out.println(users);
         serializeUsers(users);
-        return true;
     }
 
 
    protected void serializeUsers (ArrayList <User> users) {
-       try {
-           FileOutputStream fileOutputStream = new FileOutputStream(getFileName());
-           ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+       try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(getFileName()))){
            objectOutputStream.writeObject(users);
-           fileOutputStream.close();
        } catch (IOException e) {
            e.printStackTrace();
        }
 
    }
 
-
+@SuppressWarnings("unchecked")
     protected ArrayList<User> deserializeUsers() {
-        try {
-            FileInputStream fileOutputStream = new FileInputStream("User.dat");
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileOutputStream);
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(getFileName()))) {
             users = (ArrayList<User>) objectInputStream.readObject();
-            objectInputStream.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -63,7 +59,7 @@ public class Bank {
 
     }
 
-    public String getFileName() {
+    protected String getFileName() {
         return fileName;
     }
 
