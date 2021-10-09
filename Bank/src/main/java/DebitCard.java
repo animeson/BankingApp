@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public class DebitCard {
-    double currentBalance;
-    String cardNumber;
-    Date expirationDate;
-    int CVV;
+public class DebitCard implements Serializable {
+    private double currentBalance;
+    private String cardNumber;
+    private Date expirationDate;
+    private int CVV;
 
     public DebitCard(double currentBalance, String cardNumber, Date expirationDate, int CVV) {
         this.currentBalance = currentBalance;

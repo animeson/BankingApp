@@ -1,36 +1,36 @@
 import java.io.*;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Bank {
-    String fileName = "User.dat";
+   public final static String fileName = "User.dat";
     File file = new File(fileName);
+    private User thisUser;
     BankMenu menu = new BankMenu(this);
+
     private ArrayList<User> users;
 
     public ArrayList<User> getUsers() {
         return users;
     }
 
-    protected void start () throws ParseException {
+    protected void start () {
         users = new ArrayList<>();
         if (file.length() != 0) {
             users = deserializeUsers();
             System.out.println(users);
         }
-        menu.showStartMenu();
+            menu.showStartMenu();
+
     }
     protected boolean doLogin (String email, String password) {
-        boolean look = false;
-        for (int i = 0; i < users.size(); i++) {
-            if (getUsers().get(i).email.equals(email)) {
-                if (getUsers().get(i).password.equals(password)) {
-                    look = true;
-                }
 
+        for (User user : users) {
+            if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
+                thisUser = user;
+                return true;
             }
         }
-        return look;
+        return false;
     }
 
     protected void doRegister (User user) {
@@ -43,13 +43,13 @@ public class Bank {
        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(getFileName()))){
            objectOutputStream.writeObject(users);
        } catch (IOException e) {
-           e.printStackTrace();
+            System.out.println("Error" + " " + e);
        }
 
    }
 
 @SuppressWarnings("unchecked")
-    protected ArrayList<User> deserializeUsers() {
+    private ArrayList<User> deserializeUsers() {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(getFileName()))) {
             users = (ArrayList<User>) objectInputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
@@ -59,8 +59,23 @@ public class Bank {
 
     }
 
-    protected String getFileName() {
+    private String getFileName() {
         return fileName;
     }
+    protected void myAccount () {
+        System.out.println(thisUser);
+    }
+
+    protected void balance () {
+        for (int i = 0; i < users.size(); i++) {
+            System.out.println (thisUser.getCart().get(i).getCurrentBalance());
+        }
+
+    }
+    protected void myLoanData () {
+        System.out.println(thisUser.getCredit());
+    }
+
+
 
 }

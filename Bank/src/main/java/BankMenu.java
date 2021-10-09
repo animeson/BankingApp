@@ -1,41 +1,34 @@
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class BankMenu  {
-    private Bank bank;
-    String name = "";
-    String surName = "";
-    Date birthday = new Date();
-    boolean gender = true;
-    String email = "";
-    String password = "";
-
-    User user = new User(name,surName,birthday,gender,email,password,null,null);
-
+    private final Bank bank;
+    private boolean look;
 
     public BankMenu(Bank bank) {
         this.bank =  bank;
     }
 
 
-    public void showStartMenu () throws ParseException {
+    public void showStartMenu () {
 
         Scanner scanner = new Scanner(System.in);
         String command;
+        while (!look) {
+            System.out.println("""
+                    Select one:
+                    1. Login
+                    2. Register
+                    0. Exit""");
+            command = scanner.next();
+            switch (command) {
+                case "1" -> showLogin();
+                case "2" -> showRegister();
+                case "0" -> System.exit(0);
+                default -> System.out.println("Repeat one more time");
+            }
+        }
 
-        System.out.println("""
-               Select one:
-               1. Login
-               2. Register
-               0. Exit""");
-                command = scanner.next();
-                switch (command) {
-                    case "1" -> showLogin();
-                    case "2" -> showRegister();
-                    case "0" -> System.exit(0);
-                    default -> System.out.println("Repeat one more time");
-                }
 
     }
     private void showLogin () {
@@ -47,54 +40,125 @@ public class BankMenu  {
         System.out.println("Enter password:");
         password = scanner.next();
 
+
         if (bank.doLogin(login, password)) {
+            look = true;
             showBankMenu();
         } else {
             System.out.println("If there is no user with such an email or password");
         }
 
     }
-    private void showRegister () throws ParseException  {
+    private void showRegister () {
         Scanner scanner = new Scanner(System.in);
         String line;
+        String name;
+        String surName;
+        Date birthday = new Date();
+        boolean gender = true;
+        String email;
+        String password;
         System.out.println("Enter Name:");
-        user.setName(scanner.next());
+        name = scanner.next();
 
         System.out.println("Enter Surname:");
-        user.setSurName(scanner.next());
+        surName = scanner.next();
 
         System.out.println("Enter Birthday:");
         System.out.println("Input format dd.MM.yyyy");
         line = scanner.next();
-        user.setBirthday(new SimpleDateFormat("dd.MM.yyyy").parse(line));
+
+        try {
+            birthday = new SimpleDateFormat("dd.MM.yyyy").parse(line);
+        } catch (Exception e) {
+            System.out.println("Invalid date format");
+            System.exit(0);
+        }
+
 
         System.out.println("Enter gender:");
         System.out.println("""
                 1. Male
                 2. Female""");
-        line = scanner.next();
+        line = scanner.next().toLowerCase(Locale.ROOT);
+
+        if (line.equals("male") || line.equals("1")) {
+            gender = true;
+        }
         if (line.equals("female") || line.equals("2")) {
-            user.setGender(gender);
+            gender = false;
         }
         System.out.println("Enter email:");
-        user.setEmail(scanner.next());
+        email = scanner.next();
 
         System.out.println("Enter password:");
-        user.setPassword(scanner.next());
+        password = scanner.next();
 
-        bank.doRegister(new User(user.getName(), user.getSurName(),user.getBirthday(), user.isGender(), user.getEmail(),user.getPassword(),null,null));
+        User user = new User(name,surName,birthday,gender,email,password,null,null);
+        bank.doRegister(user);
 
 
 
     }
-    public static void showBankMenu() {
-            System.out.println("""
-                1. Show my profile info
-                2. Order new service
-                3. Show my services info
-                0. Exit
-                """);
 
+    private void createACreditCard () {
+        double currentBalance = 0.0;
+        String cardNumber = "0";
+        Date expirationDate = new Date();
+        int CVV = 0;
+        DebitCard debitCard = new DebitCard(currentBalance,cardNumber,expirationDate,CVV);
+
+
+    }
+
+
+    private void createLoan () {
+        Scanner scanner = new Scanner(System.in);
+        Date dateOfRegistration;
+        double amount;
+        double interestRate;
+        int creditTerm;
+        double monthlyPayment;
+
+        dateOfRegistration = new Date();
+        System.out.println("Enter the loan amount:");
+        amount = scanner.nextDouble();
+        System.out.println("At what percentage do you want to take out a loan?");
+        interestRate = scanner.nextDouble();
+        System.out.println("""
+                For how long would a hotide take credit?
+                (Indicated in months)""");
+        creditTerm = scanner.nextInt();
+        System.out.println("How much will you pay per month?");
+        monthlyPayment = scanner.nextDouble();
+        Loan loan = new Loan(dateOfRegistration,amount,interestRate,creditTerm,monthlyPayment);
+        System.out.println(loan);
+    }
+
+    private void showBankMenu() {
+        Scanner scanner = new Scanner(System.in);
+        String command;
+        while (true) {
+            System.out.println("""
+                    1. My account
+                    2. My balance
+                    3. My loan data
+                    4. Create a credit card
+                    5. Create loan
+                    0. Exit
+                    """);
+            command = scanner.next();
+            switch (command) {
+                case "1" -> bank.myAccount();
+                case "2" -> bank.balance();
+                case "3" -> bank.myLoanData();
+                case "4" -> createACreditCard();
+                case "5" -> createLoan();
+                case "0" -> System.exit(1);
+                default -> System.out.println("Repeat one more time");
+            }
+
+        }
 
     }
 

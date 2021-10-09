@@ -1,18 +1,18 @@
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class User implements Serializable {
-    String name;
-    String surName;
-    Date birthday;
-    boolean gender;
-    String email;
-    String password;
-    DebitCard[] cart;
-    Loan[] credit;
+    private String name;
+    private String surName;
+    private Date birthday;
+    private boolean gender;
+    private String email;
+    private String password;
+    private List<DebitCard> cart;
+    private List<Loan> credit;
 
-    public User(String name, String surName, Date birthday, boolean gender, String email, String password, DebitCard[] cart, Loan[] credit) {
+    public User(String name, String surName, Date birthday, boolean gender, String email, String password, List<DebitCard> cart, List<Loan> credit) {
         this.name = name;
         this.surName = surName;
         this.birthday = birthday;
@@ -22,6 +22,7 @@ public class User implements Serializable {
         this.cart = cart;
         this.credit = credit;
     }
+
 
     public String getName() {
         return name;
@@ -63,28 +64,28 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public DebitCard[] getCart() {
-        return cart;
-    }
-
-    public void setCart(DebitCard[] cart) {
-        this.cart = cart;
-    }
-
-    public Loan[] getCredit() {
-        return credit;
-    }
-
-    public void setCredit(Loan[] credit) {
-        this.credit = credit;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<DebitCard> getCart() {
+        return cart;
+    }
+
+    public void setCart(List<DebitCard> cart) {
+        this.cart = cart;
+    }
+
+    public List<Loan> getCredit() {
+        return credit;
+    }
+
+    public void setCredit(List<Loan> credit) {
+        this.credit = credit;
     }
 
     @Override
@@ -96,8 +97,8 @@ public class User implements Serializable {
                 ", gender=" + gender +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", cart=" + Arrays.toString(cart) +
-                ", credit=" + Arrays.toString(credit) +
+                ", cart=" + cart +
+                ", credit=" + credit +
                 '}';
     }
 }

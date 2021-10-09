@@ -1,10 +1,10 @@
 import java.util.Date;
 public class Loan {
-    Date dateOfRegistration;
-    double amount;
-    double interestRate;
-    int creditTerm;
-    double monthlyPayment;
+    private Date dateOfRegistration;
+    private double amount;
+    private double interestRate;
+    private int creditTerm;
+    private double monthlyPayment;
 
     public Loan(Date dateOfRegistration, double amount, double interestRate, int creditTerm, double monthlyPayment) {
         this.dateOfRegistration = dateOfRegistration;
