@@ -6,12 +6,11 @@ public class Bank {
     File file = new File(fileName);
     private User thisUser;
     BankMenu menu = new BankMenu(this);
-
     private ArrayList<User> users;
 
-    public ArrayList<User> getUsers() {
+/*    public ArrayList<User> getUsers() {
         return users;
-    }
+    }*/
 
     protected void start () {
         users = new ArrayList<>();
@@ -67,14 +66,37 @@ public class Bank {
     }
 
     protected void balance () {
-        for (int i = 0; i < users.size(); i++) {
-            System.out.println (thisUser.getCart().get(i).getCurrentBalance());
-        }
+      if (thisUser.getCart().size() != 0) {
+          for (int i = 0; i <= thisUser.getCart().size() - 1; i++) {
+                System.out.println (
+                "|" + "Cart "+  thisUser.getCart().get(i).getCardNumber() + " = "+
+                thisUser.getCart().get(i).getCurrentBalance() + " $ "+"|");
+          }
+        } else { System.out.println("You have no cards.");
+      }
+
 
     }
     protected void myLoanData () {
-        System.out.println(thisUser.getCredit());
+        if (thisUser.getCredit().size() == 0) {
+            System.out.println("You have no credits");
+        } else {
+            System.out.println(thisUser.getCredit());
+        }
+
     }
+
+    protected void addCart (DebitCard debitCard) {
+        thisUser.getCart().add(debitCard);
+        serializeUsers(users);
+    }
+
+    protected void addLoan (Loan loan) {
+        thisUser.getCredit().add(loan);
+        serializeUsers(users);
+    }
+
+
 
 
 

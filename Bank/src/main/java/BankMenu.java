@@ -1,3 +1,5 @@
+import javax.swing.text.html.parser.Parser;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -94,7 +96,7 @@ public class BankMenu  {
         System.out.println("Enter password:");
         password = scanner.next();
 
-        User user = new User(name,surName,birthday,gender,email,password,null,null);
+        User user = new User(name,surName,birthday,gender,email,password,new ArrayList<DebitCard>(),new ArrayList<Loan>());
         bank.doRegister(user);
 
 
@@ -102,13 +104,26 @@ public class BankMenu  {
     }
 
     private void createACreditCard () {
+        SecureRandom random = new SecureRandom();
         double currentBalance = 0.0;
-        String cardNumber = "0";
+
+
+        String cardNumber = random.ints(48, 90)
+                .filter(i -> (i < 57 || i > 65))
+                .mapToObj(i -> (char) i)
+                .limit(16)
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+
         Date expirationDate = new Date();
-        int CVV = 0;
+
+        int CVV = random.nextInt(999 - 100 + 1)+ 100;
+
         DebitCard debitCard = new DebitCard(currentBalance,cardNumber,expirationDate,CVV);
 
+        bank.addCart(debitCard);
 
+        System.out.println("Cart created");
     }
 
 
@@ -132,7 +147,8 @@ public class BankMenu  {
         System.out.println("How much will you pay per month?");
         monthlyPayment = scanner.nextDouble();
         Loan loan = new Loan(dateOfRegistration,amount,interestRate,creditTerm,monthlyPayment);
-        System.out.println(loan);
+        bank.addLoan(loan);
+        System.out.println("Loan created");
     }
 
     private void showBankMenu() {

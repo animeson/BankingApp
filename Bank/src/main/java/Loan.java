@@ -1,5 +1,6 @@
+import java.io.Serializable;
 import java.util.Date;
-public class Loan {
+public class Loan  implements Serializable {
     private Date dateOfRegistration;
     private double amount;
     private double interestRate;
